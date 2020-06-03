@@ -1,0 +1,84 @@
+<h3>You are in chat</h3>
+<h5>Here you can chat with others</h5>
+
+<style>
+	.msg-container {
+		display: flex;
+		flex-direction: column;
+		width: 80%;
+		margin: 0 auto;
+	}
+
+	.msg {
+		margin-bottom: 3px;
+		padding: 5px 10px;
+		background-color: #3498db;
+		border-radius: 20px;
+		color: white;
+	}
+
+	.msg-text {
+	}
+
+	.msg-right {
+		align-self: flex-end;
+	}
+
+	.msg-left {
+		align-self: flex-start;
+		background-color: #2980b9;
+	}
+</style>
+
+<div class="msg-container" id="chat-msg-container">
+	<div class="msg msg-right">
+		<div class="msg-text">Some text</div>
+	</div>
+	<div class="msg msg-left">
+		<div class="msg-text">Some other text</div>
+	</div>
+</div>
+
+<form id="chat" autocomplete="off">
+	<div class="row">
+		<div class="input-field col s10">
+			<input type="text" id="msgInput" placeholder="Type here..." />
+		</div>
+		<div>
+			<button class="btn waves-effect blue waves-light" type="submit" name="action">Send<i class="material-icons right">send</i></button>
+		</div>
+	</div>
+</form>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+	const socket = io.connect('http://localhost:3000');
+	const form = document.getElementById('chat');
+	const msgInput = document.getElementById('msgInput');
+	const msgContainer = document.getElementById('chat-msg-container');
+
+	form.addEventListener('submit', (e) => {
+		e.preventDefault();
+		const msgText = msgInput.value;
+		const msg = {
+			msgText,
+		};
+		socket.emit('msg:send', msg);
+	});
+	socket.on('msg:received', (msg) => {
+		msgInput.value = '';
+		msgInput.select();
+		msgContainer.innerHTML += createMsg(msg);
+	});
+
+	socket.on('msg', (data) => {
+		console.log(data);
+	});
+
+	function createMsg(msg) {
+		return `
+        <div class="msg msg-left">
+            <div class="msg-text">${msg.msgText}</div>
+        </div>`;
+	}
+</script>

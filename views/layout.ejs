@@ -4,11 +4,14 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="stylesheet" href="css/materialize.min.css" />
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 		<title>Chat Application</title>
 	</head>
 	<body>
-		<h1>Hello world</h1>
-		<%-body%>
+		<%- include('partials/navbar') %>
+		<div class="container center-align">
+			<%-body%>
+		</div>
 	</body>
-	<script src="js/meterialize.min.js"></script>
+	<script src="js/materialize.min.js"></script>
 </html>

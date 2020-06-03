@@ -3,6 +3,7 @@ const app = express();
 const expressLayouts = require('express-ejs-layouts');
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
+const morgan = require('morgan');
 
 const PORT = 3000 || process.env.PORT;
 
@@ -10,16 +11,26 @@ app.set('view engine', 'ejs');
 
 app.use(expressLayouts);
 app.use(express.static('public'));
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 
 // Routes handle
+app.use('/chat', require('./routes/chatRouter'));
+
 app.get('/', (req, res) => {
 	res.render('main');
 });
 
 io.on('connection', (socket) => {
-	socket.emit('news', { hello: 'world' });
-	socket.on('my other event', (data) => {
+	console.log('Connected');
+	socket.on('msg:send', (data) => {
 		console.log(data);
+
+		socket.emit('msg:received', data);
+		socket.broadcast.emit('msg:received', data);
+	});
+
+	socket.on('disconnect', () => {
+		console.log('Disconnected');
 	});
 });
 
