@@ -1,0 +1,29 @@
+<div class="row">
+	<form action="/register" method="POST" class="col s4 offset-s4">
+		<%- include('../messages', {messages: messages}) %>
+		<h5>Register</h5>
+		<div class="row">
+			<div class="input-field col s12">
+				<input id="last_name" type="text" name="username" class="validate" />
+				<label for="last_name">Username</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="input-field col s12">
+				<input id="password" type="password" name="password" class="validate" />
+				<label for="password">Password</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="input-field col s12">
+				<input id="repeatPassword" type="password" name="passwordRepeat" class="validate" />
+				<label for="repeatPassword">Repeat password</label>
+			</div>
+		</div>
+		<p>Already have account? <a href="/login">Log in</a></p>
+		<button class="btn green waves-effect waves-light" type="submit" name="action">
+			Submit
+			<i class="material-icons right">send</i>
+		</button>
+	</form>
+</div>

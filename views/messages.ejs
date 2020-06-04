@@ -1,0 +1,31 @@
+<% if(messages.info) { %>
+<script>
+	M.toast({
+		html: `
+			<div class="card-content green-text">
+				<%- messages.info %>
+			</div>`,
+		classes: 'card green lighten-5',
+	});
+</script>
+<% } %> <% if(messages.error) { %>
+<script>
+	M.toast({
+		html: `
+			<div class="card-content red-text">
+				<%- messages.error %>
+			</div>`,
+		classes: 'card red lighten-5',
+	});
+</script>
+<% } %> <% if(messages.warning) { %>
+<script>
+	M.toast({
+		html: `
+			<div class="card-content orange-text">
+				<%- messages.warning %>
+			</div>`,
+		classes: 'card orange lighten-5',
+	});
+</script>
+<% } %>

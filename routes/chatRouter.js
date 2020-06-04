@@ -1,6 +1,8 @@
 const router = require('express').Router();
 
-router.route('/').get((req, res) => {
+const { authorizedUser } = require('../config/auth');
+
+router.route('/').get(authorizedUser, (req, res) => {
 	res.render('chat/main');
 });
 

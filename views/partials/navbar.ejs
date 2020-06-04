@@ -5,9 +5,22 @@
 				Chat App
 			</a>
 			<ul id="nav-mobile" class="right hide-on-med-and-down">
+				<% if (user) { %> <% if (user.roles.includes('ADMIN')) {%>
+				<li><a href="/user/list">Users list</a></li>
+				<% } %>
+				<li><a href="/chat">Chat</a></li>
+				<li><a href="/logout">Log out</a></li>
 				<li>
-					<a href="/chat">Chat</a>
+					<a href="#" class="blue waves-effect waves-light btn"
+						><%- user.username%> <% if (user.roles.includes('ADMIN')) {%>
+						<span class="badge orange white-text" data-badge-caption="">ADMIN</span>
+						<% } %></a
+					>
 				</li>
+				<% } else { %>
+				<li><a href="/login">Log in</a></li>
+				<li><a href="/register">Sign in</a></li>
+				<% } %>
 			</ul>
 		</div>
 	</div>
