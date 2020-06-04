@@ -1,42 +1,18 @@
 <h3>You are in chat</h3>
 <h5>Here you can chat with others</h5>
 
-<style>
-	.msg-container {
-		display: flex;
-		flex-direction: column;
-		width: 80%;
-		margin: 0 auto;
-	}
-
-	.msg {
-		margin-bottom: 3px;
-		padding: 5px 10px;
-		background-color: #3498db;
-		border-radius: 20px;
-		color: white;
-	}
-
-	.msg-text {
-	}
-
-	.msg-right {
-		align-self: flex-end;
-	}
-
-	.msg-left {
-		align-self: flex-start;
-		background-color: #2980b9;
-	}
-</style>
-
 <div class="msg-container" id="chat-msg-container">
-	<div class="msg msg-right">
+	<!-- <div class="msg msg-right">
+		<div class="msg-username">Username One</div>
 		<div class="msg-text">Some text</div>
 	</div>
-	<div class="msg msg-left">
-		<div class="msg-text">Some other text</div>
+	<div class="msg-alert">
+		<div class="msg-text">This is alert message</div>
 	</div>
+	<div class="msg msg-left">
+		<div class="msg-username">Username Two</div>
+		<div class="msg-text">Some other text</div>
+	</div> -->
 </div>
 
 <form id="chat" autocomplete="off">
@@ -57,28 +33,57 @@
 	const msgInput = document.getElementById('msgInput');
 	const msgContainer = document.getElementById('chat-msg-container');
 
+	const userId = `<%- user.id%>`;
+	const username = `<%- user.username%>`;
+	const user = { id: userId, username };
+
+	let lastUserMessage = '';
+
+	socket.emit('user:connecting', { user });
+
+	socket.on('user:connected', (data) => {
+		const newUser = data.user;
+		const alertMessage = userId === newUser.id ? `You are now connected` : `${newUser.username} are now connected`;
+		msgContainer.innerHTML += createAlertMsg(alertMessage);
+	});
+
+	socket.on('user:disconnected', (data) => {
+		const disconnectedUser = data.user;
+		msgContainer.innerHTML += createAlertMsg(`${disconnectedUser.username} left the chat`);
+	});
+
 	form.addEventListener('submit', (e) => {
 		e.preventDefault();
 		const msgText = msgInput.value;
+		if (msgText.length === 0) return;
 		const msg = {
 			msgText,
+			user,
 		};
 		socket.emit('msg:send', msg);
 	});
+
 	socket.on('msg:received', (msg) => {
 		msgInput.value = '';
 		msgInput.select();
 		msgContainer.innerHTML += createMsg(msg);
-	});
-
-	socket.on('msg', (data) => {
-		console.log(data);
+		lastUserMessage = msg.user.id;
 	});
 
 	function createMsg(msg) {
+		const messageAlignClass = msg.user.id === userId ? 'msg-right' : 'msg-left';
+		const usernameField = lastUserMessage === msg.user.id ? '' : `<div class="msg-username">${msg.user.username}</div>`;
 		return `
-        <div class="msg msg-left">
-            <div class="msg-text">${msg.msgText}</div>
-        </div>`;
+		<div class="msg ${messageAlignClass}">
+			${usernameField}
+			<div class="msg-text">${msg.msgText}</div>
+		</div>`;
+	}
+
+	function createAlertMsg(msg) {
+		return `
+		<div class="msg-alert">
+			<div class="msg-text">${msg}</div>
+		</div>`;
 	}
 </script>
