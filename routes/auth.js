@@ -12,7 +12,7 @@ router
 	})
 	.post(unauthorizedUser, (req, res, next) => {
 		passport.authenticate('local', {
-			successRedirect: '/chat',
+			successRedirect: '/',
 			failureRedirect: '/login',
 			failureFlash: true,
 		})(req, res, next);

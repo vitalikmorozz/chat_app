@@ -1,5 +1,4 @@
-<h3>You are in chat</h3>
-<h5>Here you can chat with others</h5>
+<h3>You are in <%= room.name %> room</h3>
 
 <div class="msg-container" id="chat-msg-container">
 	<!-- <div class="msg msg-right">
@@ -28,18 +27,19 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
-	const socket = io.connect('http://localhost:3000');
+	const socket = io('/chat/room').connect('http://localhost:3000');
 	const form = document.getElementById('chat');
 	const msgInput = document.getElementById('msgInput');
 	const msgContainer = document.getElementById('chat-msg-container');
 
+	const roomId = `<%- room.id %>`;
 	const userId = `<%- user.id%>`;
 	const username = `<%- user.username%>`;
 	const user = { id: userId, username };
 
 	let lastUserMessage = '';
 
-	socket.emit('user:connecting', { user });
+	socket.emit('user:connecting', { user, roomId });
 
 	socket.on('user:connected', (data) => {
 		const newUser = data.user;
@@ -59,6 +59,7 @@
 		const msg = {
 			msgText,
 			user,
+			roomId,
 		};
 		socket.emit('msg:send', msg);
 	});

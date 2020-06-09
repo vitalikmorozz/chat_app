@@ -15,5 +15,12 @@
 		<div class="container center-align">
 			<%-body%>
 		</div>
+
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+				var elems = document.querySelectorAll('.sidenav');
+				var instances = M.Sidenav.init(elems);
+			});
+		</script>
 	</body>
 </html>

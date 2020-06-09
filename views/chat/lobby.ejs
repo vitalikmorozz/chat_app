@@ -1,0 +1,19 @@
+<h3>Here is the list of available groups</h3>
+
+<div>
+	<ul id="room-list">
+		<% rooms.forEach((room) => { %>
+		<li><a href="/chat/room/<%= room.id %>"><%= room.name %></a></li>
+		<% }) %>
+	</ul>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+	const socket = io.connect('http://localhost:3000');
+
+	const roomsList = document.getElementById('room-list');
+	socket.on('room:new', (data) => {
+		roomsList.innerHTML += `<li><a href="/chat/room/${data.room.id}">${data.room.name}</a></li>`;
+	});
+</script>
